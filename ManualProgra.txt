@@ -1,0 +1,97 @@
+
+Los cambios se encuentran señalizados por asteriscos así como su explicación
+
+** Creacion de los esquemas para las diferentes tablas, con claves foráneas en series y movies con opcion a borrar en cascada para evitar errores a la hora de borrar los datos de la tabla genres
+@genres_table
+Schema::create('genres', function(Blueprint $table) {
+        $table->engine='InnoDB'; **
+        $table->id(); **
+        $table->string('name'); **
+    });
+@movies_table
+Schema::create('movies', function(Blueprint $table) {
+        $table->engine='InnoDB'; **
+        $table->id(); **
+        $table->string('name'); **
+        $table->bigInteger('year'); **
+        $table->unsignedBigInteger('genre_id'); **
+        $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade'); **
+    });
+@series_table
+Schema::create('series', function(Blueprint $table) {
+        $table->engine='InnoDB'; **
+        $table->id(); **
+        $table->string('name'); **
+        $table->bigInteger('seasons'); **
+        $table->unsignedBigInteger('genre_id'); **
+        $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade'); **
+    });
+
+
+
+** Añade los valores name e id de la tabla de generos para poder usarlo posteriormente en la creación de nuevos datos, esta línea de código se ha creado tambien para series (función a continuación)
+@MovieController
+public function create()
+{
+    $movie = new Movie();
+    $genre = Genre::pluck('name', 'id'); **
+    return view('movie.create', compact('movie', 'genre'));
+}
+@SeriesController
+public function create()
+{
+    $series = new Series();
+    $genre = Genre::pluck('name', 'id'); **
+    return view('series.create', compact('series', 'genre'));
+}
+
+** Idem a la funcion anterior pero para la modificacion de los datos ya existentes
+@MovieController
+public function edit($id)
+{
+    $movie = Movie::find($id);
+    $genre = Genre::pluck('name', 'id'); **
+    return view('movie.edit', compact('movie', 'genre'));
+}
+@SeriesController
+public function edit($id)
+{
+    $series = Series::find($id);
+    $genre = Genre::pluck('name', 'id'); **
+    return view('series.edit', compact('series', 'genre'));
+}
+
+
+
+** Se ha añadido el lenguaje español para los mensajes de error a traves de la creación de un archivo validation.php en el directorio resources\lang\es y el cambio en el archivo app.php
+@app.php
+'locale' => 'es', **
+
+** En Añadido tmbién se han traducido los mensajes de éxito y diferentes labels y buttons manualmente en el código
+@MovieController
+public function update(Request $request, Movie $movie)
+{
+    request()->validate(Movie::$rules);
+
+    $movie->update($request->all());
+
+    return redirect()->route('movies.index')
+        ->with('success', 'Película modificada correctamente'); **
+}
+@SeriesController
+public function update(Request $request, Movie $movie)
+    {
+    request()->validate(Series::$rules);
+
+    $series->update($request->all());
+
+    return redirect()->route('series.index')
+        ->with('success', 'Serie modificada correctamente'); **
+}
+etc (mirar en los diferentes archivos de cada vista)
+
+
+
+Aspectos a mejorar/ampliar:
+Posibilidad de marcar las películas/series vistas mediante un checkbox
+Nueva lista de películas y series en la que se guarden en conjunto las películas y series añadidas por los usuarios de manera anónima y los demás puedan ver la lista conjunta

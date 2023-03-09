@@ -1,0 +1,10 @@
+Bienvenido a tu lista de series y películas personal!
+
+Para empezar deberás registrarte con un usuario, correo y contraseña.
+Una vez registrados tendrás 3 opciones en la parte superior derecha de la web (Género, Películas y Series).
+
+Menú de géneros: Aquí podrás crear el listado de géneros que tendrán tus películas y series.
+Menú de películas: En este menú añadirás las películas que hayas visto o quieras ver.
+Menú de series: Por ultimo aquí, como en el menú de películas, podrás añadir tu series pendientes de ver o ya vistas.
+
+OJO! Al borrar un género se borrarán automáticamente ls películas y series que pertenezcan a ese género.
